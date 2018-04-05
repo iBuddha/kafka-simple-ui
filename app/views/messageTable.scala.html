@@ -1,0 +1,30 @@
+@import kafka.authorization.manager.model.request.StringMessage
+@(records: Seq[Either[StringMessage, String]])
+
+<table border="1">
+    <tr>
+        <th>partition</th>
+        <th>offset</th>
+        <th>timestamp</th>
+        <th>key</th>
+        <th>value</th>
+    </tr>
+    @for(record <- records) {
+        @if(record.isLeft) {
+            @defining(record.left.get) { r =>
+                <tr>
+                    <td>@r.partition</td>
+                    <td>@r.offset</td>
+                    <td>@r.ts</td>
+                    <td>@r.key</td>
+                    <td>@r.value</td>
+                </tr>
+            }
+        } else {
+            <tr><td>@record.right.get</td></tr>
+        }
+    }
+</table>
+<p><font color="#ff7f50">
+    if error message looks like "offset x is smaller than currently smallest x+1", means this partition is empty</font>
+</p>

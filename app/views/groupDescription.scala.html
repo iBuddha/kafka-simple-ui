@@ -1,0 +1,67 @@
+@import kafka.authorization.manager.model.form.ConsumerGroupForm
+@import kafka.authorization.manager.model.GroupDescription
+@(form: Form[ConsumerGroupForm], result: Option[GroupDescription], errorMessage: Option[String] = None)(implicit request: RequestHeader, messages: Messages)
+
+<a href="@routes.AsyncController.index()">index</a>
+
+@if(errorMessage.isDefined){
+    <h2><font color="red"> @errorMessage.get</font></h2>
+}
+
+@helper.form(ConsumerGroupForm.describeGroupPostUrl) {
+
+    @helper.inputText(form("group"), 'name -> "group id")
+
+    <button>Describe Consumer Group</button>
+
+    @if(result.isDefined) {
+        <h2>Descrption for <font color="blue"> @result.get.groupId </font></h2>
+        <h3>state: @result.get.state</h3>
+        <table border="1">
+            <tr>
+                <th>Topic</th>
+                <th>Partition</th>
+                <th>Description</th>
+            </tr>
+            @for((tp, desOpts) <- result.get.partitionDescriptions) {
+                <tr>
+                <td>@tp.topic</td>
+                <td>@tp.partition</td>
+                @if(desOpts.isDefined) {
+                    <td>
+                        <table border="1">
+                            <tr>
+                                <th>committed offset</th>
+                                <th>log end offset</th>
+                                <th>lag</th>
+                                <th>owner-memberId</th>
+                                <th>owner-clientId</th>
+                                <th>owner-host</th>
+                            </tr>
+                            <tr>
+                                <td>@desOpts.get.currentOffset.map(_.toString).getOrElse("hasn't committed yet")</td>
+                                <td>@desOpts.get.logEndOffset.map(_.toString).getOrElse("unknown")</td>
+                                <td>@desOpts.get.lag.map(_.toString).getOrElse("unknown")</td>
+                                @*<td>@desOpts.get.owner.map(_.toString).getOrElse("unknown")</td>*@
+                                @if(desOpts.get.owner.isDefined) {
+                                    <td>@desOpts.get.owner.get.memberId</td>
+                                    <td>@desOpts.get.owner.get.clientId</td>
+                                    <td>@desOpts.get.owner.get.host</td>
+                                }else {
+                                    <td>unknown</td>
+                                    <td>unknown</td>
+                                    <td>unknown</td>
+                                }
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                } else {
+                    <td>can't retrieve description, maybe this topic does not exists</td>
+                }
+            }
+
+        </table>
+    }
+
+}

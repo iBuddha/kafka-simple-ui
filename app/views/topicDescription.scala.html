@@ -1,0 +1,65 @@
+@import kafka.authorization.manager.model.form.TopicForm
+@import kafka.authorization.manager.model.request.PartitionedTopicMetadata
+@import org.apache.kafka.common.Node
+
+@(form: Form[TopicForm], result: Option[PartitionedTopicMetadata], errorMessage: Option[String] = None)(implicit request: RequestHeader, messages: Messages)
+
+<a href="@routes.AsyncController.index()">index</a>
+
+@helper.form(TopicForm.describeTopicPostUrl) {
+
+    @helper.inputText(form("topic"))
+
+    <button>Describe Topic</button>
+
+}
+@if(errorMessage.isDefined) {
+    <h2>@errorMessage.get</h2>
+}
+
+    @empty(begin: Long, end: Long) = {
+    @if(begin == end) {
+        ✔
+    } else {
+        ✖
+    }
+    }
+
+    @underReplicated(replcias: Array[Node], inSync: Array[Node]) = {
+    @if(replcias.size != inSync.size) {
+        ✔
+    } else {
+        ✖
+    }
+    }
+
+
+
+@if(result.isDefined) {
+    <h2>Description for <font color="blue"> @result.get.name</font></h2>
+    <table border="1">
+        <tr>
+            <th>Partition Id</th>
+            <th>Leader</th>
+            <th>Replicas(id)</th>
+            <th>In-sync Replicas(id)</th>
+            <th>Begin Offset</th>
+            <th>End Offset</th>
+            <th>Under Replicated?</th>
+            <th>Empty?</th>
+        </tr>
+        @for(p <- result.get.partitions.values) {
+            <tr>
+                <td>@p.id</td>
+                <td>@p.leader.id()</td>
+                <td>@p.replicas.map(_.id).mkString(",")</td>
+                <td>@p.inSyncReplicas.map(_.id).mkString(",")</td>
+                <td>@p.beginOffset</td>
+                <td>@p.endOffset</td>
+                <td>@underReplicated(p.replicas, p.inSyncReplicas)</td>
+                <td>@empty(p.beginOffset, p.endOffset)</td>
+            </tr>
+        }
+        <p>If begin offset equals to end offset, means this partition is empty.</p>
+    </table>
+}

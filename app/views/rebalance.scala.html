@@ -1,0 +1,25 @@
+@import kafka.authorization.manager.model.form.ConsumerGroupForm
+@import kafka.authorization.manager.model.GroupDescription
+@(form: Form[ConsumerGroupForm], errorMessage: Option[String])(implicit request: RequestHeader, messages: Messages)
+
+<a href="@routes.AsyncController.index()">index</a>
+
+<h1>可以用于检测当consumer group发生rebalance的时候，程序的应对是否正确</h1>
+当使用这个功能触发rebalance的时候，有一个成员会被踢出消费组，并触发消费组的rebalance。这个被踢出消费组的成员无法提交最近一次commit<br>
+这种情况在真实环境中是可能会发生的。程序需要确保在此情况发生时能正确工作。<br>
+另两种情况是：<br>
+<li>1. 有成员离开消费组，并且不再加入，这些会使得其它成员被分配的(Topic, Partition)发生变化</li>
+<li>2. 被消费的topic的分区数量发生变化，使得每个成员被分配的TopicPartition发生变化</li>
+第一种情况，需要启动多个消费者，然后在消费组处于stable状态后，关掉其中的一个消费者(最好直接kill它)来模拟。
+
+@if(errorMessage.isDefined) {
+    <h3><font color="#32cd32">@errorMessage.get</font></h3>
+}
+
+@helper.form(ConsumerGroupForm.triggerRebalancePostUrl) {
+
+    @helper.inputText(form("group"), 'name -> "group id")
+
+    <button>Trigger Rebalance</button>
+
+}

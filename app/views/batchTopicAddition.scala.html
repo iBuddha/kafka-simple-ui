@@ -1,0 +1,16 @@
+@()
+<a href="@routes.AsyncController.index()">index</a>
+<form action="/addTopics" method="POST" id="topicsForm">
+    <input type="submit">
+</form>
+<textarea name="topics" form="topicsForm" rows="4" cols="50">
+topic,partition,replication-factor
+</textarea>
+
+<p>
+    需要创建的topic列表，例如<br>
+    topicA,2,3<br>
+    topicB,3,3<br>
+    将会创建2个topic，topicA的分区数为2，副本数为3；topicB的分区数为3，副本数为3<br>
+    注意创建topic是异步的，需要过一会去Kafka-Manager上确认是否创建成功。或者过一会用这个工具查一下topic metadata
+</p>

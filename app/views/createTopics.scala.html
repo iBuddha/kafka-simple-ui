@@ -1,0 +1,33 @@
+@import kafka.authorization.manager.model.form.CreateTopicsForm
+
+@(form: Form[CreateTopicsForm], number: Int, result: Option[String], errorMessage: Option[String] = None)(implicit request: RequestHeader, messages: Messages)
+
+<a href="@routes.AsyncController.index()">index</a>
+
+
+
+@helper.form(CreateTopicsForm.postUrl) {
+    <div class="job-data-map">
+
+        @helper.repeat(form("topics"), number) { topic =>
+            @topic("name").value.map { _ =>
+                @topic("partitions").value.map { _ =>
+                    @topic("replicas").value.map { _ =>
+                        <div class="job-data-delete text-right"><a href="#">delete</a></div>
+                    }
+                }
+            }
+
+            @helper.inputText(topic("name"), '_label -> "Name", 'labelClass -> "col-sm-3 text-right", 'inputDivClass -> "col-sm-4", 'class -> "job-data-key form-control form-inline-control")
+            @helper.inputText(topic("partitions"), '_label -> "Partition Number", 'labelClass -> "col-sm-3 text-right", 'inputDivClass -> "col-sm-4", 'class -> "job-data-value form-control form-inline-control")
+            @helper.inputText(topic("replicas"), '_label -> "Replication Factor", 'labelClass -> "col-sm-3 text-right", 'inputDivClass -> "col-sm-4", 'class -> "job-data-value form-control form-inline-control")
+        }
+        <div class="job-data-add text-right"><a href="javascript:;">add</a></div>
+
+
+    </div>
+    <button>Create Topics</button>
+}
+
+<script src="@routes.Assets.versioned("javascripts/jquery-1.10.2.min.js")" type="text/javascript"></script>
+<script src="@routes.Assets.versioned("javascripts/jobData.js")" type="text/javascript"></script>

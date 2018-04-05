@@ -1,0 +1,31 @@
+@import kafka.authorization.manager.model.form.SelectResourceForm
+@import kafka.security.auth.Resource
+@import kafka.security.auth.Acl
+
+@(form: Form[SelectResourceForm], postUrl: Call, result: Option[(Resource, Set[Acl])])(implicit request: RequestHeader, messages: Messages)
+
+<a href="@routes.AsyncController.index()">index</a>
+
+@helper.form(postUrl) {
+  @*  @helper.CSRF.formField *@
+
+    @helper.select(
+        field = SelectResourceForm.form("resourceType"),
+        options = Seq(
+            "Topic" -> "Topic",
+            "Group" -> "Group",
+            "Cluster" -> "Cluster"
+        )
+    )
+
+    @helper.inputText(form("resourceName"))
+
+    <button>Find Associated ACLs</button>
+
+    <p></p>
+
+    @if(result.isDefined) {
+        @aclList(Map(result.get._1 -> result.get._2))
+    }
+
+}

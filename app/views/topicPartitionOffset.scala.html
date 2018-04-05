@@ -1,0 +1,22 @@
+@import kafka.authorization.manager.model.form.TopicPartitionOffsetForm
+@import kafka.authorization.manager.model.request.StringMessage
+@(form: Form[TopicPartitionOffsetForm], result: Option[Either[StringMessage, String]] = None, errorMessage: Option[String] = None)(implicit request: RequestHeader, messages: Messages)
+
+<a href="@routes.AsyncController.index()">index</a>
+
+@if(errorMessage.isDefined) {
+    <h2><font color="red">@errorMessage.get</font></h2>
+}
+
+@helper.form(TopicPartitionOffsetForm.getMessageByTopicPartitionOffsetUrl) {
+    @* @helper.CSRF.formField *@
+    @helper.inputText(form("topic"))
+    @helper.inputText(form("partition"))
+    @helper.inputText(form("offset"))
+    <button>Get Message</button>
+}
+<br>
+
+@if(result.isDefined) {
+    @messageTable(Seq(result.get))
+}

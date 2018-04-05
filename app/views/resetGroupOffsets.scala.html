@@ -1,0 +1,19 @@
+@import kafka.authorization.manager.model.form.GroupAndDateTimeForm
+@(form: Form[GroupAndDateTimeForm], errorMessage: Option[String] = None)(implicit request: RequestHeader, messages: Messages)
+
+<a href="@routes.AsyncController.index()">index</a>
+
+@if(errorMessage.isDefined) {
+    <h2><font color="red">@errorMessage.get</font></h2>
+}
+
+@helper.form(GroupAndDateTimeForm.postUrl) {
+    @* @helper.CSRF.formField *@
+    @helper.inputText(form("group"))
+    @helper.inputText(form("time"))
+    <button>Reset</button>
+}
+<p>把consumer group的所有成员重置到某个时间点继续消费</p>
+<p>需要确保消费组正在运行中, 否则请使用<a href="@routes.AsyncController.resetGroupTopicOffsetGet()">此工具</a>来指定这个group订阅的topic并重置进度<p>
+<p>如果消费组的成员非常非常多，可能会需要重试几次</p>
+

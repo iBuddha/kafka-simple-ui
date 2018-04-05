@@ -1,0 +1,65 @@
+@import kafka.authorization.manager.model.form.AclRecordForm
+@import kafka.security.auth.Resource
+@import kafka.security.auth.Acl
+
+@(form: Form[AclRecordForm], postUrl: Call, added: Option[Boolean] = None, currentAcls: Option[Map[Resource, Set[Acl]]] = None)(implicit request: RequestHeader, messages: Messages)
+
+<a href="@routes.AsyncController.index()">index</a>
+
+@helper.form(postUrl) {
+    @* @helper.CSRF.formField *@
+
+    @helper.select(
+        field = AclRecordForm.form("permissionType"),
+        options = Seq(
+            "Allow" -> "Allow",
+            "Deny" -> "Deny"
+        )
+    )
+
+    @helper.inputText(form("principal"))
+
+    @helper.inputText(form("host"))
+
+    @helper.select(
+        field = AclRecordForm.form("operation"),
+        options = Seq(
+            "Read" -> "Allow",
+            "Write" -> "Write",
+            "Create" -> "Create",
+            "Delete" -> "Delete",
+            "Alter" -> "Alter",
+            "Describe" -> "Describe",
+            "ClusterAction" -> "ClusterAction",
+            "All" -> "All"
+        )
+    )
+
+    @helper.select(
+        field = AclRecordForm.form("resourceType"),
+        options = Seq(
+            "topic" -> "topic",
+            "group" -> "consumer group",
+            "cluster" -> "cluster"
+        )
+    )
+
+    @helper.inputText(form("resourceName"))
+
+
+
+    <button>Add ACL</button>
+
+    @if(!added.isDefined) {
+    } else {
+        @if(added.get == true) {
+            <h3>successfully added</h3>
+        } else {
+            <h3>failed to add</h3>
+        }
+    }
+
+    @if(currentAcls.isDefined){
+        @aclList(currentAcls.get)
+    }
+}

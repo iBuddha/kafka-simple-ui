@@ -1,0 +1,21 @@
+@import kafka.authorization.manager.model.form.TopicForm
+
+@import kafka.authorization.manager.model.request.StringMessage
+@(form: Form[TopicForm], postUrl: Call, result: Option[Either[List[Either[StringMessage, String]], String]])(implicit request: RequestHeader, messages: Messages)
+
+<a href="@routes.AsyncController.index()">index</a>
+
+    @helper.form(postUrl) {
+        @helper.inputText(form("topic"))
+
+        <button>Get Latest Message</button>
+
+        @if(result.isDefined) {
+            @if(result.get.isRight){
+                <p>@result.get.right.get</p>
+            } else {
+                @messageTable(result.get.left.get)
+            }
+        }
+
+    }

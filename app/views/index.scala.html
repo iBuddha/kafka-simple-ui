@@ -1,0 +1,34 @@
+<h1>Topic</h1>
+
+<h2>Message & Offset</h2>
+
+<p><a href="@routes.AsyncController.latestMessageGet">Get Latest Message</a> 查看某个topic最新的消息</p>
+<p><a href="@routes.AsyncController.topicOffsetGet">Get Offsets</a> 搜索某个时间点对应的offset</p>
+<p><a href="@routes.AsyncController.topicOffsetDiffGet">Get Offsets Diff</a> 计算两个时间点之间的消息条数</p>
+<p><a href="@routes.AsyncController.messagesWithCountGet">Get Messages</a> 获取某个时间点开始的N条信息</p>
+<p><a href="@routes.AsyncController.getMessageByTopicPartitionOffsetGet">Get Message</a>根据(topic, partition, offset)的组合获取消息</p>
+<p><a href="@routes.AsyncController.produceGet">Produce</a> 发送消息到topic</p>
+
+<h2>Manage</h2>
+
+<p><a href="@routes.AsyncController.describeTopicGet">Describe Topic</a> 查看topic的元数据</p>
+<p><a href="@routes.AsyncController.addTopicsGet()">Add Topics</a> 批量创建topic</p>
+<p><a href="@routes.AsyncController.createTopicsGet()">Add Topics</a> 批量创建topic</p>
+<p><a href="@routes.AsyncController.createTopicGet()">Create Topic with broker assignment</a>创建topic并指定使用的broker</p>
+
+
+
+<h1>Consumer Group</h1>
+
+<p><a href="@routes.AsyncController.describeGroupGet">Describe Consumer Group </a> 查看consumer group的信息 </p>
+<p><a href="@routes.AsyncController.rebalanceGet">Trigger Rebalance</a> 触发rebalance</p>
+<p><a href="@routes.AsyncController.resetGroupOffsetGet">Reset Consumer Group Progress</a> 将Consumer Group的消费进度重置到某个时间</p>
+<p><a href="@routes.AsyncController.resetGroupTopicOffsetGet">Reset Consumer Group Progress for single topic</a> 将Consumer Group订阅的某个topic的消费进度重置到某个时间</p>
+
+
+<h1>ACL</h1>
+
+<p><a href="@routes.AsyncController.addAcl()">Add ACL</a></p>
+<p><a href="@routes.AsyncController.resourceQuery()">Find Resource ACLs</a></p>
+<p><a href="@routes.AsyncController.principalQuery()">Find Principal ACLs</a></p>
+<p><a href="@routes.AsyncController.listAllAcls()">All ACLs</a></p>

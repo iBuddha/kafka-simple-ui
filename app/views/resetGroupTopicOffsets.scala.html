@@ -1,0 +1,21 @@
+@import kafka.authorization.manager.model.form.GroupTopicDateTimeForm
+@(form: Form[GroupTopicDateTimeForm], errorMessage: Option[String] = None)(implicit request: RequestHeader, messages: Messages)
+
+<a href="@routes.AsyncController.index()">index</a>
+
+@if(errorMessage.isDefined) {
+    <h2><font color="red">@errorMessage.get</font></h2>
+}
+
+@helper.form(GroupTopicDateTimeForm.resetPostUrl) {
+    @* @helper.CSRF.formField *@
+    @helper.inputText(form("group"))
+    @helper.inputText(form("topic"))
+    @helper.inputText(form("time"))
+    <button>Reset</button>
+}
+
+<p>把consumer group所订阅的topic重置到某个时间点继续消费</p>
+<p>如果消费组不在运行，并且topic存在，那么可以重置成功</p>
+<p>如果消费组在运行，但是没有订阅这个topic，则重置不会成功；如果订阅了此topic，则重置会成功</p>
+

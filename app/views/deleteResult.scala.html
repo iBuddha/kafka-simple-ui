@@ -1,0 +1,8 @@
+@import kafka.authorization.manager.model.form.SelectResourceForm
+@import kafka.security.auth.Resource
+@import kafka.security.auth.Acl
+@(message: String, form: Form[SelectResourceForm], postUrl: Call, result: Option[(Resource, Set[Acl])])(implicit request: RequestHeader, messages: Messages)
+
+<h1>@message</h1>
+
+@resourceAcl(form, postUrl, result)(request, messages)

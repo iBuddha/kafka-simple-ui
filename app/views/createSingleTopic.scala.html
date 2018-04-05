@@ -1,0 +1,23 @@
+@(brokerIds: Seq[Int], errorMessage: Option[String] = None)
+<a href="@routes.AsyncController.index()">index</a>
+
+@if(errorMessage.isDefined) {
+    <h1><font color="red">@errorMessage.get</font></h1>
+}
+@if(errorMessage.isEmpty) {
+    <form action="/createTopic" method="POST" id="topicsForm">
+        Topic: <input type="text" name="topicName"><br>
+        Partitions: <input type="number" name="partitions"><br>
+        Replication-factor: <input type="number" name="replicationFactor"><br>
+        Choose brokers:<br>
+        @for(brokerId <- brokerIds) {
+            @brokerId: <input type="checkbox" name="broker-@brokerId">
+        }
+        <br>
+        <input type="submit" value="Submit">
+    </form>
+
+    <br><br>
+    <p><font color="#1e90ff">选中以指定这个topic的副本所在的broker</font></p>
+    <p><font color="#1e90ff">replication-factor不能大于broker数量</font></p>
+}

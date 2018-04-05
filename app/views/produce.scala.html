@@ -1,0 +1,48 @@
+@import kafka.authorization.manager.model.request.StringMessage
+@import kafka.authorization.manager.model.form.GetMessagesWithMaxCountForm
+@import kafka.authorization.manager.model.form.ProduceForm
+@import org.apache.kafka.clients.producer.RecordMetadata
+@(form: Form[ProduceForm], result: Option[Either[RecordMetadata, String]])(implicit request: RequestHeader, messages: Messages)
+
+<a href="@routes.AsyncController.index()">index</a>
+
+@helper.form(ProduceForm.postUrl) {
+    @helper.inputText(form("topic"))
+    @helper.inputText(form("partition"))
+    @helper.inputText(form("key"))
+    @helper.inputText(form("value"))
+
+    <button>Send</button>
+
+
+    @if(result.isDefined) {
+        @defining(result.get) { response =>
+            @if(response.isRight) {
+                <p>@response.right.get</p>
+            } else{
+            @defining(response.left.get) { metadata =>
+                <table border="1">
+                    <tr>
+                        <th>partition</th>
+                        <th>offset</th>
+                        <th>timestamp</th>
+                        <th>checksum</th>
+                        <th>serializedKeySize</th>
+                        <th>serializedValueSize</th>
+                    </tr>
+                    <tr>
+                        <th>@metadata.partition()</th>
+                        <th>@metadata.offset()</th>
+                        <th>@metadata.timestamp()</th>
+                        <th>@metadata.checksum()</th>
+                        <th>@metadata.serializedKeySize()</th>
+                        <th>@metadata.serializedValueSize()</th>
+                    </tr>
+                </table>
+
+            }
+
+        }
+        }
+    }
+}

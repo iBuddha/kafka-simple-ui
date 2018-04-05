@@ -1,0 +1,7 @@
+@import kafka.security.auth.Resource
+@import kafka.security.auth.Acl
+@(aclMapping: Map[Resource, Set[Acl]])
+
+<a href="@routes.AsyncController.index()">index</a>
+
+@aclList(aclMapping)

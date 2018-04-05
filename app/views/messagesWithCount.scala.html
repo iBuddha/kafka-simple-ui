@@ -1,0 +1,41 @@
+@import kafka.authorization.manager.model.request.StringMessage
+@import kafka.authorization.manager.model.form.GetMessagesWithMaxCountForm
+@(form: Form[GetMessagesWithMaxCountForm], result: Option[Map[Int, Either[Seq[StringMessage], String]]], errorMessage: Option[String] = None)(implicit request: RequestHeader, messages: Messages)
+
+<a href="@routes.AsyncController.index()">index</a>
+
+@helper.form(GetMessagesWithMaxCountForm.postUrl) {
+    @helper.inputText(form("topic"))
+    @helper.inputText(form("time"))
+    @helper.inputText(form("count"))
+
+    <button>Get Messages</button>
+
+    @if(errorMessage.isDefined) {
+        <h2>@errorMessage.get</h2>
+    }
+}
+
+@if(result.isDefined) {
+    @defining(result.get) { partitionedRecords =>
+        <table border="1">
+            <tr>
+                <th>partition</th>
+                <th>records</th>
+            </tr>
+            @for((partitionId, partitionResult) <- partitionedRecords) {
+                <tr>
+                    <td>@partitionId</td>
+                    <td>
+                    @if(partitionResult.isRight) {
+                        @partitionResult.right.get
+                    } else {
+                        @messageTable(partitionResult.left.get.map(Left(_)))
+
+                    }
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+}

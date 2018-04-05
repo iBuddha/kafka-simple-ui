@@ -1,0 +1,75 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# An example controller showing a sample home page
+#GET     /                           controllers.HomeController.index
+
+GET         /                                 controllers.AsyncController.index
+
+# Map static resources from the /public folder to the /assets URL path
+GET         /assets/*file                     controllers.Assets.versioned(path="/public", file: Asset)
+
+GET         /acl/add                          controllers.AsyncController.addAcl
+
+POST        /acl/add/result                   controllers.AsyncController.addResult
+
+#GET     /acl/resource/form          controllers.AsyncController.resourceForm
+#GET     /acl/principal/form         controllers.AsyncController.principalForm
+
+POST        /acl/resource/query               controllers.AsyncController.findResourceAcls
+POST        /acl/principal/query              controllers.AsyncController.findPrincipalAcls
+
+GET         /rest/acl/resource/topic/:topic        controllers.AsyncController.getTopicAcls(topic)
+GET         /rest/acl/resource/group/:group        controllers.AsyncController.getGroupAcls(group)
+GET         /acl/resource/cluster             controllers.AsyncController.getClusterAcls
+
+GET         /acl/resource                     controllers.AsyncController.resourceQuery
+GET         /acl/principal                    controllers.AsyncController.principalQuery
+
+GET         /acl/list                         controllers.AsyncController.listAllAcls
+
+POST        /acl/delete                       controllers.AsyncController.deleteAcl
+#POST    /acl/delete                  controllers.CountController.deleteAcl
+
+#GET         /group/:id                        controllers.AsyncController.describeGroupGet(id)
+POST        /describe/group                   controllers.AsyncController.describeGroupPost
+GET        /describe/group                   controllers.AsyncController.describeGroupGet
+
+GET         /message/latest                   controllers.AsyncController.latestMessageGet
+POST        /message/latest                   controllers.AsyncController.latestMessagePost
+
+GET         /message/offset controllers.AsyncController.getMessageByTopicPartitionOffsetGet
+POST         /message/offset controllers.AsyncController.getMessageByTopicPartitionOffsetPost
+
+GET         /offset                           controllers.AsyncController.topicOffsetGet
+POST        /offset                           controllers.AsyncController.topicOffsetPost
+GET         /offsetdiff                       controllers.AsyncController.topicOffsetDiffGet
+POST        /offsetdiff                       controllers.AsyncController.topicOffsetDiffPost
+
+GET         /messages                         controllers.AsyncController.messagesWithCountGet
+POST        /messages                         controllers.AsyncController.messagesWithCountPost
+
+GET         /produce                          controllers.AsyncController.produceGet
+POST        /produce                          controllers.AsyncController.producePost
+
+GET         /topic                            controllers.AsyncController.describeTopicGet
+POST        /topic                            controllers.AsyncController.describeTopicPost
+
+GET         /createTopics                     controllers.AsyncController.createTopicsGet
+POST        /createTopics                     controllers.AsyncController.createTopicsPost
+
+GET         /addTopics                        controllers.AsyncController.addTopicsGet
+POST        /addTopics                        controllers.AsyncController.addTopicsPost
+
+GET         /createTopic                      controllers.AsyncController.createTopicGet
+POST        /createTopic                      controllers.AsyncController.createTopicPost
+
+GET         /rebalance                        controllers.AsyncController.rebalanceGet
+POST        /rebalance                        controllers.AsyncController.rebalancePost
+
+GET         /reset/group                      controllers.AsyncController.resetGroupOffsetGet
+POST        /reset/group                      controllers.AsyncController.resetGroupOffsetPost
+
+GET         /reset/group/topic                      controllers.AsyncController.resetGroupTopicOffsetGet
+POST        /reset/group/topic                      controllers.AsyncController.resetGroupTopicOffsetPost

@@ -1,0 +1,53 @@
+@import kafka.authorization.manager.model.form.SelectTopicOffsetDiffForm
+@import kafka.authorization.manager.model.request.OffsetBehindTs
+@import kafka.authorization.manager.utils.TextEncoder
+
+@(form: Form[SelectTopicOffsetDiffForm], result: Option[Map[Int, (OffsetBehindTs, OffsetBehindTs)]], errorMessage: Option[String] = None)(implicit request: RequestHeader, messages: Messages)
+
+<a href="@routes.AsyncController.index()">index</a>
+
+@helper.form(SelectTopicOffsetDiffForm.postUrl) {
+    @* @helper.CSRF.formField *@
+    @helper.inputText(form("topic"))
+    @helper.inputText(form("from"))
+    @helper.inputText(form("to"))
+    <button>Get Offset Diff</button>
+
+}
+
+@if(errorMessage.isDefined){
+    <h2>@errorMessage.get</h2>
+}
+
+@sum(mapping: Map[Int, (OffsetBehindTs, OffsetBehindTs)]) = {
+    @mapping.map(e => e._2._2.offset - e._2._1.offset).sum
+}
+
+@if(result.isDefined) {
+    @defining(result.get) { mapping =>
+        <table border="1">
+            <tr>
+                <th>Partition</th>
+                @*<th>Time</th>*@
+                <th>from</th>
+                <th>begin offset</th>
+                <th>to</th>
+                <th>end offset</th>
+                <th>diff</th>
+            </tr>
+            @for((partition, offsetBehindTs) <- mapping) {
+                <tr>
+                    <td>@partition</td>
+                    <td>@TextEncoder.tsToString(offsetBehindTs._1.ts)</td>
+                    @*<td>@TextEncoder.tsToString(offsetBehindTs.ts)</td>*@
+                    <td>@offsetBehindTs._1.offset</td>
+                    <td>@TextEncoder.tsToString(offsetBehindTs._2.ts)</td>
+                    <td>@offsetBehindTs._2.offset</td>
+                    <td>@(offsetBehindTs._2.offset - offsetBehindTs._1.offset)</td>
+                </tr>
+            }
+            <p>sum: @sum(mapping)</p>
+        </table>
+    }
+    <p><font color="#deb887">这里的offset是指这个时间点的下一条消息的offset</font></p>
+}

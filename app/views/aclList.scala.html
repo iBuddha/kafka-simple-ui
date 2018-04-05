@@ -1,0 +1,54 @@
+@import kafka.security.auth.Resource
+@import kafka.security.auth.Acl
+@import kafka.authorization.manager.model.ResourceAcl
+@(aclMapping: Map[Resource, Set[Acl]])
+
+@for((r, acls) <- aclMapping) {
+    <table border="1">
+        <tr>
+            <th>@r.toString()</th>
+        </tr>
+        @for(acl <- acls) {
+            <tr>
+                <td>@acl.toString()</td>
+                <td><input type="button"  data-val="@ResourceAcl(r, acl).toJson()" value="delete" class="btn"/>
+                @*<td><a href="@controllers.routes.AsyncController.deleteAcl(acl, r)">delete</a></td>*@
+                @*<td>*@
+                    @*<form method="post" action="@controllers.routes.AsyncController.deleteAcl()">*@
+                        @*<input type="hidden" name="resource" value=@r.resourceType><br>*@
+                        @*<input type="hidden" name="resource" value=@r.name><br>*@
+                        @*<input type="submit" value="Delete">*@
+                    @*</form>*@
+                @*</td>*@
+            </tr>
+        }
+    </table>
+}
+
+<script src="@routes.Assets.versioned("javascripts/jquery-1.10.2.min.js")" type="text/javascript"></script>
+
+@*<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>*@
+    @*alert(JSON.stringify($(this).data('val')))*@
+
+<script type="text/javascript">
+        $('.btn').off().on('click', function (){
+            var r = confirm("Delete?");
+            if (r == true) {
+                txt = "You pressed OK!";
+                $.ajax({
+                    type: 'POST',
+                    url: '@controllers.routes.AsyncController.deleteAcl()',
+                    data: JSON.stringify($(this).data('val')),
+                    contentType: "application/json",
+                    success: function (data){
+                        alert(data);
+                    },
+                    error: function (){
+                        alert('ajax error');
+                    }
+                });
+            } else {
+                txt = "You pressed Cancel!";
+            }
+        })
+</script>

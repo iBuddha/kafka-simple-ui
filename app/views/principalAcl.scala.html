@@ -1,0 +1,22 @@
+@import kafka.authorization.manager.model.form.SelectPrincipalForm
+@import kafka.security.auth.Resource
+@import kafka.security.auth.Acl
+@import org.apache.kafka.common.security.auth.KafkaPrincipal
+
+@(form: Form[SelectPrincipalForm], postUrl: Call, result: Option[(KafkaPrincipal, Map[Resource, Set[Acl]])])(implicit request: RequestHeader, messages: Messages)
+
+<a href="@routes.AsyncController.index()">index</a>
+
+@helper.form(postUrl) {
+   @* @helper.CSRF.formField *@
+
+    @helper.inputText(form("principal"))
+
+    <button>Find Associated ACLs</button>
+
+    @if(result.isDefined) {
+        <h2>ACLs for @result.get._1</h2>
+        @aclList(result.get._2)
+    }
+
+}

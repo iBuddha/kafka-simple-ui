@@ -1,0 +1,36 @@
+@import kafka.authorization.manager.model.form.SelectTopicOffsetForm
+@import kafka.authorization.manager.model.request.OffsetBehindTs
+@import kafka.authorization.manager.utils.TextEncoder
+
+@(form: Form[SelectTopicOffsetForm], result: Option[Map[Int, OffsetBehindTs]], errorMessage: Option[String] = None)(implicit request: RequestHeader, messages: Messages)
+
+<a href="@routes.AsyncController.index()">index</a>
+
+@helper.form(SelectTopicOffsetForm.postUrl) {
+    @* @helper.CSRF.formField *@
+    @helper.inputText(form("topic"))
+    @helper.inputText(form("time"))
+    <button>Get Offset</button>
+
+    @if(result.isDefined) {
+        @defining(result.get) { mapping =>
+                <p>Time: @form.get.time.toString</p>
+            <table border="1">
+                <tr>
+                    <th>Partition</th>
+                    @*<th>Time</th>*@
+                    <th>Offset</th>
+                </tr>
+                @for((partition, offsetBehindTs) <- mapping) {
+                    <tr>
+                        <td>@partition</td>
+                        @*<td>@TextEncoder.tsToString(offsetBehindTs.ts)</td>*@
+                        <td>@offsetBehindTs.offset</td>
+                    </tr>
+                }
+            </table>
+        }
+        <p><font color="#deb887">这里的offset是指这个时间点的下一条消息的offset</font></p>
+    }
+
+}
